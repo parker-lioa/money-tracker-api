@@ -12,7 +12,6 @@ app.use( body_parser.urlencoded({ extended : true }));
 
 app.use("/api", routes);
 
-
 app.get("/", (req, res) => {
   res.send("<div>Hello fucking world!</div>");
 });
