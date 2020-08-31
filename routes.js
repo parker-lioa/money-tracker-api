@@ -2,7 +2,7 @@ const express = require("express");
 const record_db = require("./db/record"); // new
 const user_db = require("./db/user"); // new
 const record = require("./db/record");
-const { replaceOne } = require("./db/record");
+const { replaceOne, update } = require("./db/record");
 const router = express.Router();
 
 // record api
@@ -14,7 +14,7 @@ router.get("/records/:user", async (req, res) => {
 });
 
 router.post("/records", async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
 
   const new_cost = new record_db({
     user: req.body.user,
@@ -27,6 +27,21 @@ router.post("/records", async (req, res) => {
     console.log(err);
   });
   res.send(new_cost);
+});
+
+router.post("/records/update", async (req, res) => {
+  console.log(req.body.cost);
+
+  try {
+    const doc = await record_db.updateOne(
+      { _id: req.body.id },
+      { cost: req.body.cost, category: req.body.category }
+    );
+  } catch (err) {
+    console.log(err);
+  }
+
+  res.send("data updated");
 });
 
 router.delete("/records/:id", (req, res) => {
@@ -57,6 +72,9 @@ router.post("/user", async (req, res) => {
       const new_user = new user_db({
         email: req.body.email,
         name: req.body.name,
+      });
+      await new_user.save((err) => {
+        console.log(err);
       });
       res.send("Signup successfully");
     }

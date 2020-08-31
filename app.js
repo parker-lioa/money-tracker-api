@@ -7,8 +7,8 @@ var port = process.env.PORT || 80;
 
 // middleware to encode form-data
 
-app.use( body_parser.json());
-app.use( body_parser.urlencoded({ extended : true }));
+app.use(body_parser.json());
+app.use(body_parser.urlencoded({ extended: true }));
 
 app.use("/api", routes);
 
