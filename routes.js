@@ -1,14 +1,13 @@
 const express = require("express");
 const record_db = require("./db/record"); // new
 const user_db = require("./db/user"); // new
-const record = require("./db/record");
 const { replaceOne, update } = require("./db/record");
 const router = express.Router();
 
 // record api
 
 router.get("/records/:user", async (req, res) => {
-  const user = req.params.user;
+  const user = req.params.user.toLowerCase();
   const list = await record_db.find({ user: user });
   res.send(list);
 });
@@ -17,9 +16,9 @@ router.post("/records", async (req, res) => {
   // console.log(req.body);
 
   const new_cost = new record_db({
-    user: req.body.user,
+    user: req.body.user.toLowerCase(),
     cost: req.body.cost,
-    category: req.body.category,
+    category: req.body.category.toLowerCase(),
     updated_time: Date.now(),
   });
 
