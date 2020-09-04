@@ -5,7 +5,7 @@ var body_parser = require("body-parser");
 var cors = require("cors");
 
 var app = express();
-var port = process.env.PORT || 80;
+var port = process.env.PORT || 8000;
 
 // middleware to encode form-data
 
