@@ -2,11 +2,14 @@ var express = require("express");
 var record = require("./routes/record");
 var user = require("./routes/user");
 var body_parser = require("body-parser");
-var app = express();
+var cors = require("cors");
 
+var app = express();
 var port = process.env.PORT || 80;
 
 // middleware to encode form-data
+
+app.use(cors());
 
 app.use(body_parser.json());
 app.use(body_parser.urlencoded({ extended: true }));

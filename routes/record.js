@@ -2,9 +2,9 @@ const express = require("express");
 const record = require("../db/record");
 const router = express.Router();
 
-router.get("/:user", async (req, res) => {
-  const user = req.params.user.toLowerCase();
-  const list = await record.find({ user: user });
+router.get("/", async (req, res) => {
+  const id = req.query.id;
+  const list = await record.find({ id:id });
   res.send(list);
 });
 
@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
   // console.log(req.body);
 
   const new_cost = new record({
-    user: req.body.user.toLowerCase(),
+    id:req.body.id,
     cost: req.body.cost,
     category: req.body.category.toLowerCase(),
     updated_time: Date.now(),
@@ -39,9 +39,8 @@ router.post("/update", async (req, res) => {
   res.send("data updated");
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/update/:id", (req, res) => {
   const id = req.params.id;
-
   record.deleteOne({ _id: id }, (err) => {
     console.log(err);
   });

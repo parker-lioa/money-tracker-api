@@ -6,9 +6,8 @@ const dayCounter = require("../DayCounter");
 
 router.get("/", async (req, res) => {
   try {
-    const email = req.query.email;
-    const name = req.query.name;
-    const the_user = await user.find({ email: email, name: name });
+    const id = req.query.id;
+    const the_user = await user.find({ _id:id});
 
     const package = {
       total_cost: the_user[0].total_cost,
@@ -25,9 +24,11 @@ router.get("/", async (req, res) => {
 });
 
 // sign up
-router.post("/signin", async (req, res) => {
+router.post("/signin", async function(req, res){
   const { body } = req;
   const { email, name } = body;
+
+  console.log({email,name});
 
   try {
     const the_user = await user.find({ email: email }, (err) => {
@@ -37,14 +38,15 @@ router.post("/signin", async (req, res) => {
         return res.end();
       }
     });
-    if (!the_user) {
+
+    if (the_user.length===0) {
       res.send({ success: false, message: "registe first!" });
       res.end();
     } else if (the_user[0].name != name) {
       res.send({ success: false, message: "wrong name!" });
       res.end();
     } else {
-      res.send({ success: true, message: "sign in successfully" });
+      res.send({ success: true, message: "sign in successfully" ,id:the_user[0]._id });
       res.end();
     }
   } catch (err) {
@@ -68,7 +70,10 @@ router.post("/signup", async (req, res) => {
         return res.end();
       }
     });
-    if (!the_user) {
+    console.log(email,name);
+    console.log(the_user);
+
+    if (the_user.length===0) {
       const new_user = new user({
         email: email,
         name: name,
@@ -79,13 +84,16 @@ router.post("/signup", async (req, res) => {
       new_user.save();
       res.send({ success: true, message: "sign up successfully" });
       return res.end();
+    }else{
+      res.send({
+        success: false,
+        message: "this email has been registered.",
+      });
+      return res.end();
     }
 
-    res.send({
-      success: false,
-      message: "this email has been registered.",
-    });
-    return res.end();
+    
+    
   } catch (err) {
     console.log(err);
   }
@@ -95,9 +103,9 @@ router.post("/signup", async (req, res) => {
 
 router.post("/update", async (req, res) => {
   try {
-    const { email, name, total_cost, total_money } = req.query;
+    const { id, total_cost, total_money } = req.query;
     const doc = await user.updateOne(
-      { email: email, name: name },
+      { _id:id },
       { total_cost: total_cost, total_money: total_money }
     );
 
